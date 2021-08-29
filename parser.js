@@ -67575,11 +67575,6 @@ const middletags = "[/b][/form][fbox]";
 const endtags = "[/fbox][/zform]";
 
 let formarr = [];
-const normImmunity = "norm";
-const nightImmunity = "night";
-const hellImmunity = "hell";
-const hell2Immunity = "hell2";
-
 let monsterhashellimmunity = false;
 let whatwashellimmunity = "";
 
@@ -67593,7 +67588,6 @@ function hpMinMax(monster, difficulty) {
             break;
         case "night":
             minimalHp = data[monster]['MinHP(N)'] * 6 / 100;
-            console.log(MonLvl[data[monster]['Level']]['HP']);
             maximumHp = data[monster]['MaxHP(N)'] * MonLvl[data[monster]['Level(N)']]['HP(N)'] / 100;
             break;
         case "hell":
@@ -67666,8 +67660,13 @@ for (const monster in data) {
 
     if(data[monster].hasOwnProperty('NameStr')) {
         let base = data[monster]['BaseId'].replace(/[0-9]/g, '');
-        let temp = data[monster]['NameStr'];
-        formarr.push(base[0].toUpperCase() + base.slice(1) + " - " + temp[0].toUpperCase() + temp.slice(1) + '\n')
+        let variant = data[monster]['NameStr'];
+        variant = variant.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g).join(' ');
+        formarr.push(base[0].toUpperCase() + base.slice(1) + " - " + variant + '\n')
+    } else {
+        let base = data[monster]['BaseId'].replace(/[0-9]/g, '');
+        let variant = "No-Variant";
+        formarr.push(base[0].toUpperCase() + base.slice(1) + " - " + variant + '\n')
     }
 
     //------------- Base_Name (Double check these ENTRIES game files aren't what you expect) -------------//
@@ -67680,7 +67679,9 @@ for (const monster in data) {
     //------------- Variant_Name -------------//
 
     if(data[monster].hasOwnProperty('NameStr')) {
-        formarr.push(starttags + "imvariant_name" + middletags + data[monster]['NameStr'] + endtags)
+        let variant = data[monster]['NameStr'];
+            variant = variant.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g).join(' ');
+        formarr.push(starttags + "imvariant_name" + middletags + variant + endtags)
     } else formarr.push(starttags + "imvariant_name" + middletags + "0" + endtags)
 
     //-------------Level-------------//
@@ -67954,99 +67955,83 @@ for (const monster in data) {
     } else formarr.push(starttags + "imrating2_hell" + middletags + "0" + endtags)
 
     let immunityAssigner = (resArr, difficulty) => {
-        if (difficulty === "hell2" && monsterhashellimmunity) {
             for (key in resArr) {
                 if (resArr[key] >= 100) {
                     switch (key)
                     {
-                        case "imdmgres_" + difficulty:
-                            if (whatwashellimmunity !== "Physical") {
-                                formarr.push(starttags + "imimm_hell2" + middletags + "Physical" + endtags);
+                        case "imdmgres_" + difficulty.replace(/[0-9]/g, ''):
+                            formarr.push(starttags + "imimm_" + difficulty + middletags + "Physical" + endtags);
+                            if (difficulty === "hell" || difficulty === "night"|| difficulty === "hell2") {
+                                if (difficulty === "hell") {
+                                    delete resArr[key];
+                                    return resArr;
+                                }
                                 return;
                             }
-                        case "immagicres_" + difficulty:
-                            if (whatwashellimmunity !== "Magic") {
-                                formarr.push(starttags + "imimm_hell2" + middletags + "Magic" + endtags);
+                            break;
+                        case "immagicres_" + difficulty.replace(/[0-9]/g, ''):
+                            formarr.push(starttags + "imimm_" + difficulty + middletags + "Magic" + endtags);
+                            if (difficulty === "hell" || difficulty === "night"|| difficulty === "hell2") {
+                                if (difficulty === "hell") {
+                                    delete resArr[key];
+                                    return resArr;
+                                }
                                 return;
-                        }
-                        case "imfireres_" + difficulty:
-                            if (whatwashellimmunity !== "Fire") {
-                                formarr.push(starttags + "imimm_hell2" + middletags + "Fire" + endtags);
+                            }
+                            break;
+                        case "imfireres_" + difficulty.replace(/[0-9]/g, ''):
+                            formarr.push(starttags + "imimm_" + difficulty + middletags + "Fire" + endtags);
+                            if (difficulty === "hell" || difficulty === "night"|| difficulty === "hell2") {
+                                if (difficulty === "hell") {
+                                    delete resArr[key];
+                                    return resArr;
+                                }
                                 return;
-                        }
-                        case "imcoldres_" + difficulty:
-                            if (whatwashellimmunity !== "Cold") {
-                                formarr.push(starttags + "imimm_hell2" + middletags + "Cold" + endtags);
+                            }
+                            break;
+                        case "imcoldres_" + difficulty.replace(/[0-9]/g, ''):
+                            formarr.push(starttags + "imimm_" + difficulty + middletags + "Cold" + endtags);
+                            if (difficulty === "hell" || difficulty === "night"|| difficulty === "hell2") {
+                                if (difficulty === "hell") {
+                                    delete resArr[key];
+                                    return resArr;
+                                }
                                 return;
-                        }
-                        case "imlightres_" + difficulty:
-                            if (whatwashellimmunity !== "Lightning") {
-                                formarr.push(starttags + "imimm_hell2" + middletags + "Lightning" + endtags);
+                            }
+                            break;
+                        case "imlightres_" + difficulty.replace(/[0-9]/g, ''):
+                            formarr.push(starttags + "imimm_" + difficulty + middletags + "Lightning" + endtags);
+                            if (difficulty === "hell" || difficulty === "night"|| difficulty === "hell2") {
+                                if (difficulty === "hell") {
+                                    delete resArr[key];
+                                    return resArr;
+                                }
                                 return;
-                        }
-                        case "impoisres_" + difficulty:
-                            if (whatwashellimmunity !== "Poison") {
-                                formarr.push(starttags + "imimm_hell2" + middletags + "Poison" + endtags);
+                            }
+                            break;
+                        case "impoisres_" + difficulty.replace(/[0-9]/g, ''):
+                            formarr.push(starttags + "imimm_" + difficulty + middletags + "Poison" + endtags);
+                            if (difficulty === "hell" || difficulty === "night"|| difficulty === "hell2") {
+                                if (difficulty === "hell") {
+                                    delete resArr[key];
+                                    return resArr;
+                                }
                                 return;
-                        }
+                            }
+                            break;
                         default:
-                                formarr.push(starttags + "imimm_hell2" + middletags + "0" + endtags);
-                                return;
+                            break;
                     }
                 }
-            };
-        } else {
-            for (key in resArr) {
-                if (resArr[key] >= 100) {
-                    switch (key)
-                    {
-                        case "imdmgres_" + difficulty:
-                            formarr.push(starttags + "imimm_" + difficulty.replace(/[0-9]/g, '') + middletags + "Physical" + endtags);
-                            difficulty === "hell" ? monsterhashellimmunity = true : monsterhashellimmunity = false;
-                            difficulty === "hell" ? whatwashellimmunity = "Physical" : whatwashellimmunity = "";
-                            return;
-                        case "immagicres_" + difficulty:
-                            formarr.push(starttags + "imimm_" + difficulty.replace(/[0-9]/g, '') + middletags + "Magic" + endtags);
-                            difficulty === "hell" ? monsterhashellimmunity = true : monsterhashellimmunity = false;
-                            difficulty === "hell" ? whatwashellimmunity = "Magic" : whatwashellimmunity = "";
-                            return;
-                        case "imfireres_" + difficulty:
-                            formarr.push(starttags + "imimm_" + difficulty.replace(/[0-9]/g, '') + middletags + "Fire" + endtags);
-                            difficulty === "hell" ? monsterhashellimmunity = true : monsterhashellimmunity = false;
-                            difficulty === "hell" ? whatwashellimmunity = "Fire" : whatwashellimmunity = "";
-                            return;
-                        case "imcoldres_" + difficulty:
-                            formarr.push(starttags + "imimm_" + difficulty.replace(/[0-9]/g, '')  + middletags + "Cold" + endtags);
-                            difficulty === "hell" ? monsterhashellimmunity = true : monsterhashellimmunity = false;
-                            difficulty === "hell" ? whatwashellimmunity = "Cold" : whatwashellimmunity = "";
-                            return;
-                        case "imlightres_" + difficulty:
-                            formarr.push(starttags + "imimm_" + difficulty.replace(/[0-9]/g, '')  + middletags + "Lightning" + endtags);
-                            difficulty === "hell" ? monsterhashellimmunity = true : monsterhashellimmunity = false;
-                            difficulty === "hell" ? whatwashellimmunity = "Lightning" : whatwashellimmunity = "";
-                            return;
-                        case "impoisres_" + difficulty:
-                            formarr.push(starttags + "imimm_" + difficulty.replace(/[0-9]/g, '')  + middletags + "Poison" + endtags);
-                            difficulty === "hell" ? monsterhashellimmunity = true : monsterhashellimmunity = false;
-                            difficulty === "hell" ? whatwashellimmunity = "Poison" : whatwashellimmunity = "";
-                            return;
-                        default:
-                            return;
-                    }
-                } else {
-                    formarr.push(starttags + "imimm_" + difficulty + middletags + "0" + endtags);
-                    monsterhashellimmunity = false;
-                    whatwashellimmunity = "";
-                    return;
-                }
-            };
+            }
+            formarr.push(starttags + "imimm_" + difficulty + middletags + "0" + endtags);
+            if (difficulty === "hell" || difficulty === "night"|| difficulty === "hell2") return resArr;
         }
-    }
 
-    immunityAssigner(normResArr, normImmunity);
-    immunityAssigner(nightResArr, nightImmunity);
-    immunityAssigner(hellResArr, hellImmunity);
-    immunityAssigner(hellResArr, hell2Immunity);
+    immunityAssigner(normResArr, "norm");
+    immunityAssigner(nightResArr, "night");
+    hellResArr = immunityAssigner(hellResArr, "hell");
+    immunityAssigner(hellResArr, "hell2");
 
     formarr.push('\n');
 }
