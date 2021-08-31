@@ -67867,7 +67867,7 @@ for (const monster in data) {
     //-------------Poison_Resistance-------------//
 
     if(data[monster].hasOwnProperty('ResPo')) {
-        formarr.push(starttags + "impoisres_norm" + middletags + data[monster]['ResDm'] + endtags)
+        formarr.push(starttags + "impoisres_norm" + middletags + data[monster]['ResPo'] + endtags)
         normResArr.impoisres_norm = data[monster]['ResPo']
     } else formarr.push(starttags + "impoisres_norm" + middletags + "0" + endtags)
 
