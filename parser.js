@@ -67578,7 +67578,26 @@ let formarr = [];
 let monsterhashellimmunity = false;
 let whatwashellimmunity = "";
 
+function hasLevel(monster, difficulty) {
+    let lvl = '';
+    switch (difficulty) {
+        case "norm":
+            lvl = data[monster]['Level'];
+            break;
+        case "night":
+            lvl = data[monster]['Level(N)'];
+            break;
+        case "hell":
+            lvl = data[monster]['Level(H)'];
+            break;
+    }
+    if (isNaN(lvl)) {
+        return false;
+    } else return true;
+}
+
 function calcExp(monster, difficulty) {
+    if (!hasLevel(monster, difficulty)) return 0;
     let experience = 0;
     switch (difficulty) {
         case "norm":
@@ -67595,6 +67614,7 @@ function calcExp(monster, difficulty) {
 }
 
 function hpMinMax(monster, difficulty) {
+    if (!hasLevel(monster, difficulty)) return 0;
     let minimalHp = 0;
     let maximumHp = 0;
     switch (difficulty) {
@@ -67615,6 +67635,7 @@ function hpMinMax(monster, difficulty) {
 }
 
 function attMinMax(monster, difficulty, aNum) {
+    if (!hasLevel(monster, difficulty)) return 0;
     let minimalAtt = 0;
     let maximumAtt = 0;
     switch (difficulty) {
@@ -67635,6 +67656,7 @@ function attMinMax(monster, difficulty, aNum) {
 }
 
 function calcDef(monster, difficulty) {
+    if (!hasLevel(monster, difficulty)) return 0;
     let defense = 0;
     switch (difficulty) {
         case "norm":
@@ -67651,6 +67673,7 @@ function calcDef(monster, difficulty) {
 }
 
 function calcAR(monster, difficulty, aNum) {
+    if (!hasLevel(monster, difficulty)) return 0;
     let attRating = 0;
     switch (difficulty) {
         case "norm":
@@ -67667,7 +67690,6 @@ function calcAR(monster, difficulty, aNum) {
 }
 
 for (const monster in data) {
-
     let normResArr = {};
     let nightResArr = {};
     let hellResArr = {};
