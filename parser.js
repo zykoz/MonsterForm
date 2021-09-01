@@ -67578,6 +67578,22 @@ let formarr = [];
 let monsterhashellimmunity = false;
 let whatwashellimmunity = "";
 
+function calcExp(monster, difficulty) {
+    let experience = 0;
+    switch (difficulty) {
+        case "norm":
+            experience = data[monster]['Exp'] * MonLvl[data[monster]['Level']]['XP'] / 100;
+            break;
+        case "night":
+            experience = data[monster]['Exp(N)'] * MonLvl[data[monster]['Level(N)']]['XP(N)'] / 100;
+            break;
+        case "hell":
+            experience = data[monster]['Exp(H)'] * MonLvl[data[monster]['Level(H)']]['XP(H)'] / 100;
+            break;
+    }
+    return experience ? Math.trunc(experience) : 0;
+}
+
 function hpMinMax(monster, difficulty) {
     let minimalHp = 0;
     let maximumHp = 0;
@@ -67715,15 +67731,15 @@ for (const monster in data) {
     //-------------Experience-------------//
 
     if(data[monster].hasOwnProperty('Exp')) {
-        formarr.push(starttags + "imxp_norm" + middletags + data[monster]['Exp'] + endtags)
+        formarr.push(starttags + "imxp_norm" + middletags + calcExp(monster, 'norm') + endtags)
     } else formarr.push(starttags + "imxp_norm" + middletags + "0" + endtags)
 
     if(data[monster].hasOwnProperty('Exp(N)')) {
-        formarr.push(starttags + "imxp_night" + middletags + data[monster]['Exp(N)'] + endtags)
+        formarr.push(starttags + "imxp_night" + middletags + calcExp(monster, 'night') + endtags)
     } else formarr.push(starttags + "imxp_night" + middletags + "0" + endtags)
 
     if(data[monster].hasOwnProperty('Exp(H)')) {
-        formarr.push(starttags + "imxp_hell" + middletags + data[monster]['Exp(H)'] + endtags)
+        formarr.push(starttags + "imxp_hell" + middletags + calcExp(monster, 'hell') + endtags)
     } else formarr.push(starttags + "imxp_hell" + middletags + "0" + endtags)
 
     //-------------Health-------------//
