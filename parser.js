@@ -67733,8 +67733,8 @@ for (const monster in data) {
     }  else formarr.push(starttags + "imlvl_night" + middletags + "0" + endtags)
     
     if(data[monster].hasOwnProperty('Level(H)')) {
-        formarr.push(starttags + "imlvl_hel" + middletags + data[monster]['Level(H)'] + endtags)
-    }  else formarr.push(starttags + "imlvl_hel" + middletags + "0" + endtags)
+        formarr.push(starttags + "imlvl_hell" + middletags + data[monster]['Level(H)'] + endtags)
+    }  else formarr.push(starttags + "imlvl_hell" + middletags + "0" + endtags)
 
     //-------------TreasureClass(TODO if Possible)-------------//
 
